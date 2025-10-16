@@ -136,6 +136,7 @@ public class FASTAReader {
 	 */
 	private boolean compareImproved(byte[] pattern, int position) throws FASTAException {
 		// TODO
+		//Hola
 		return false;
 	}
 
