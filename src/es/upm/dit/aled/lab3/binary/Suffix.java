@@ -18,4 +18,5 @@ public class Suffix {
 	public Suffix(int index) {
 		suffixIndex = index;
 	}
+	
 }
