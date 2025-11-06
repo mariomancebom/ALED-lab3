@@ -80,21 +80,60 @@ public class FASTAReaderSuffixes extends FASTAReader {
 	@Override
 	public List<Integer> search(byte[] pattern) {
 		// TODO
-		/*
-		List<Integer> numSecuencia = new ArrayList<>();
+		int lo = 0;
+		int hi = suffixes.length;
 		boolean found = false;
+		int coincidencia = 0;
 		int index = 0;
-		int m = pattern.length / 2;
-		Suffix posSuffix = suffixes[m];
-		while(pattern[index] == content[posSuffix + index]) {
-			index++;
-			if(index==pattern.length) {
-				numSecuencia.addAll(posSuffix);
-		//Usar compare suffix (el metodo)
+		List<Integer> results = new ArrayList<Integer>();
+		// Implementacion del bucle de busqueda binaria
+		while (!found && (hi - lo) > 1) {
+			int m = lo + (hi - lo) / 2;
+			int posSuffix = suffixes[m].suffixIndex;
+			// Comprobar si coinciden
+			if (pattern[index] == content[posSuffix + index]) {
+				index++;
+				// Si la comparacion llega hasta el final
+				if (index == pattern.length) {
+					results.add(posSuffix);
+					found = true;
+					coincidencia = m;
+				}
+
+			} else if (pattern[index] < content[posSuffix + index]) {
+				// Caso: pattern es lexicograficamente ANTERIOR al sufijo
+				hi = m - 1;
+				index = 0;
+			}
+			// Caso: pattern es lexicograficamente POSTERIOR al sufijo
+			else if (pattern[index] > content[posSuffix + index]) {
+				lo = m + 1;
+				index = 0;
 			}
 		}
-*/
-		return null;
+		if (found == true) {
+			int indiceArriba = 0;
+			int indiceAbajo = 0;
+			int posArriba = coincidencia + 1;
+			int posAbajo = coincidencia - 1;
+			while (pattern[indiceArriba] == content[suffixes[posArriba].suffixIndex + indiceArriba]) {
+				indiceArriba++;
+				if (pattern.length == indiceArriba) {
+					results.add(suffixes[posArriba].suffixIndex);
+					indiceArriba = 0;
+					posArriba++;
+				}
+			}
+			while (pattern[indiceAbajo] == content[suffixes[posAbajo].suffixIndex + indiceAbajo]) {
+				indiceAbajo++;
+				if (pattern.length == indiceAbajo) {
+					results.add(suffixes[posAbajo].suffixIndex);
+					indiceAbajo = 0;
+					posAbajo++;
+				}
+			}
+		}
+		return results;
 	}
 
 	public static void main(String[] args) {
